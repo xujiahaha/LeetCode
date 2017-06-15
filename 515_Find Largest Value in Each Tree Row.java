@@ -34,3 +34,19 @@ public class Solution {
         return res;
     }
 }
+// dfs solution
+public class Solution {
+    public List<Integer> largestValues(TreeNode root) {
+        List<Integer> res = new ArrayList<>();
+        if(root == null) return res;
+        dfs(root, 1, res);
+        return res;
+    }
+    public void dfs(TreeNode root, int level, List<Integer> res) {
+        if(root == null) return;
+        if(level > res.size()) res.add(root.val);
+        if(root.val > res.get(level-1)) res.set(level-1, root.val);
+        dfs(root.left, level+1, res);
+        dfs(root.right, level+1, res);
+    }
+}

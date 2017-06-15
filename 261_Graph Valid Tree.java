@@ -2,6 +2,7 @@
  * Time: O(V+2E)
  * Space: O(V+2E)
 */
+// BFS solution
 public class Solution {
     // note: no cycle, one connected component
     public boolean validTree(int n, int[][] edges) {
@@ -48,5 +49,45 @@ public class Solution {
             }
         }
         return count == n;
+    }
+}
+// DFS solution -> check if there is a cycle in undirected graph
+public class Solution {
+    // note: no cycle, one connected component
+    public boolean validTree(int n, int[][] edges) {
+        if(edges.length == 0 && n == 1) return true;
+        if(edges.length < n-1) return false; 
+        List[] adj = new ArrayList[n];
+        // build adjacency list and count number of neighbors for each node
+        for(int i = 0; i < n; i++) {
+            adj[i] = new ArrayList<Integer>();
+        }
+        for(int i = 0; i < edges.length; i++) {
+            adj[edges[i][0]].add(edges[i][1]);
+            adj[edges[i][1]].add(edges[i][0]);
+        }
+        boolean[] visited = new boolean[n];
+        // check if there is a cycle and if all nodes are connected.
+        int count = 0;
+        for(int i = 0; i < n; i++) {
+            if(!visited[i]) {
+                if(hasCycle(adj, visited, i, -1)) return false;
+                count++;
+            }
+        }
+        return count == 1;
+    }
+    
+    public boolean hasCycle(List[] adj, boolean[] visited, int cur, int parent) {
+        visited[cur] = true;
+        for(int i = 0; i < adj[cur].size(); i++) {
+            int neighbor = (int) adj[cur].get(i);
+            if(!visited[neighbor]) {
+                if(hasCycle(adj, visited, neighbor, cur)) return true;
+            } else {
+                if(neighbor != parent) return true;
+            }
+        }
+        return false;
     }
 }
